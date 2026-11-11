@@ -11,10 +11,11 @@ export default function Layout() {
     <div className="min-h-screen bg-bg text-text">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="lg:pl-64">
+      {/* Padding kiri disesuaikan dengan lebar sidebar (80px + margin 16px + jarak) */}
+      <div className="md:pl-[104px] transition-all duration-300">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
-        <main className="px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
+        <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in max-w-7xl mx-auto">
           <Outlet />
         </main>
       </div>

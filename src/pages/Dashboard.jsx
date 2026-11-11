@@ -11,9 +11,10 @@ import ActivityForm from '../components/dashboard/ActivityForm.jsx'
 import { useActivities } from '../hooks/useActivities.js'
 
 export default function Dashboard() {
-  const { activities, addActivity, updateActivity, deleteActivity, toggleStatus } = useActivities()
+  // Tambahkan loading
+  const { activities, loading, addActivity, updateActivity, deleteActivity, toggleStatus, searchQuery, setSearchQuery } = useActivities()
 
-  const [search, setSearch] = useState('')
+
   const [category, setCategory] = useState('all')
   const [status, setStatus] = useState('all')
   const [modalOpen, setModalOpen] = useState(false)
@@ -23,22 +24,38 @@ export default function Dashboard() {
     return activities
       .filter(a => category === 'all' || a.category === category)
       .filter(a => status === 'all' || a.status === status)
-      .filter(a => a.title.toLowerCase().includes(search.toLowerCase()))
+      .filter(a => a.title.toLowerCase().includes(searchQuery.toLowerCase()))
       .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime))
-  }, [activities, search, category, status])
+  }, [activities, searchQuery, category, status])
 
   const openCreate = () => { setEditing(null); setModalOpen(true) }
   const openEdit = (act) => { setEditing(act); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setEditing(null) }
 
-  const handleSubmit = (data) => {
-    if (editing) updateActivity(editing.id, data)
-    else addActivity(data)
+  const handleSubmit = async (data) => {
+    if (editing) await updateActivity(editing.id, data)
+    else await addActivity(data)
     closeModal()
   }
 
-  const handleDelete = (id) => {
-    if (confirm('Hapus kegiatan ini?')) deleteActivity(id)
+  const handleDelete = async (id) => {
+    if (confirm('Hapus kegiatan ini?')) await deleteActivity(id)
+  }
+
+  // LOADING SKELETON
+  if (loading) {
+    return (
+      <div className="animate-pulse space-y-6">
+        <div className="h-8 bg-surface-2 rounded w-1/4"></div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-surface-2 rounded-xl"></div>)}
+        </div>
+        <div className="h-10 bg-surface-2 rounded w-full"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map(i => <div key={i} className="h-40 bg-surface-2 rounded-xl"></div>)}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -50,26 +67,17 @@ export default function Dashboard() {
       />
 
       <StatCards />
-
       <FilterBar
-        search={search} onSearchChange={setSearch}
-        category={category} onCategoryChange={setCategory}
-        status={status} onStatusChange={setStatus}
+        search={searchQuery}
+        onSearchChange={setSearchQuery}
+        category={category}
+        onCategoryChange={setCategory}
+        status={status}
+        onStatusChange={setStatus}
       />
+      <ActivityGrid activities={filtered} onEdit={openEdit} onDelete={handleDelete} onToggle={toggleStatus} emptyAction={<Button onClick={openCreate}><Plus size={16} /> Tambah Kegiatan</Button>} />
 
-      <ActivityGrid
-        activities={filtered}
-        onEdit={openEdit}
-        onDelete={handleDelete}
-        onToggle={toggleStatus}
-        emptyAction={<Button onClick={openCreate}><Plus size={16} /> Tambah Kegiatan</Button>}
-      />
-
-      <Modal
-        open={modalOpen}
-        onClose={closeModal}
-        title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}
-      >
+      <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}>
         <ActivityForm initial={editing} onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
     </>
