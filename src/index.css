@@ -1,39 +1,37 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ===== DESIGN TOKENS (tema hitam pekat) ===== */
 @theme {
-  --color-bg:         #000000;
-  --color-surface:    #0a0a0a;
-  --color-surface-2:  #141414;
-  --color-border:     #262626;
-  --color-border-2:   #3f3f46;
-  --color-text:       #ffffff;
-  --color-muted:      #a1a1aa;
-  --color-dim:        #52525b;
-  --color-danger:     #ef4444;
-  --color-success:    #22c55e;
-
-  --radius-card: 14px;
-
-  /* animasi reusable → dipakai via class animate-fade-in, animate-slide-up, dst */
-  --animate-fade-in:  fadeIn .3s ease both;
+  --color-bg: #000000;
+  --color-surface: #0a0a0a;
+  --color-surface-2: #141414;
+  --color-border: #262626;
+  --color-border-2: #3f3f46;
+  --color-text: #ffffff;
+  --color-muted: #a1a1aa;
+  --color-dim: #52525b;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  
+  --animate-fade-in: fadeIn .3s ease both;
   --animate-slide-up: slideUp .35s ease both;
   --animate-scale-in: scaleIn .22s ease both;
 }
 
-@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
 @keyframes scaleIn { from { opacity: 0; transform: scale(.96) } to { opacity: 1; transform: none } }
 
-/* ===== BASE ===== */
 html, body, #root { height: 100% }
 
 body {
-  @apply bg-bg text-text antialiased;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-/* scrollbar gelap biar konsisten */
 ::-webkit-scrollbar { width: 8px; height: 8px }
 ::-webkit-scrollbar-track { background: transparent }
 ::-webkit-scrollbar-thumb { background: #262626; border-radius: 999px }
