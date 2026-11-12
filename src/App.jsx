@@ -6,6 +6,7 @@ import Calendar from './pages/Calendar.jsx'
 import Activities from './pages/Activities.jsx'
 import Statistics from './pages/Statistics.jsx'
 import Settings from './pages/Settings.jsx'
+import Notifications from './pages/Notifications.jsx'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="activities" element={<Activities />} />
         <Route path="statistics" element={<Statistics />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="notifications" element={<Notifications />} />
       </Route>
     </Routes>
   )

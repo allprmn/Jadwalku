@@ -2,6 +2,7 @@
 import { Menu, Bell, Search, X } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useActivities } from '../../hooks/useActivities.js'
+import { Link } from 'react-router-dom'
 
 const PAGE_TITLES = {
   '/': 'Dashboard',
@@ -69,12 +70,12 @@ export default function Header({ onMenuClick }) {
 
         {/* KANAN: Aksi & Profil */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <button className="relative p-2 rounded-full text-muted hover:text-text hover:bg-surface-2 transition group">
+           <Link to="/notifications" className="relative p-2 rounded-full text-muted hover:text-text hover:bg-surface-2 transition group">
             <Bell size={18} className="group-hover:animate-pulse" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-danger rounded-full ring-2 ring-surface"></span>
-          </button>
+          </Link>
           <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white text-black grid place-items-center font-bold text-sm shadow-sm cursor-pointer hover:ring-2 ring-white/30 transition-all">
-            M
+            A
           </div>
         </div>
 
