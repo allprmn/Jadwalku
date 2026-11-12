@@ -1,0 +1,1 @@
+export const CATEGORIES = ['Kuliah', 'Tugas', 'Organisasi', 'Pribadi']

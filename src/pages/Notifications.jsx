@@ -1,45 +1,82 @@
-// src/pages/Notifications.jsx
 import { useState, useEffect } from 'react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Delete02Icon, Notification03Icon } from '@hugeicons/core-free-icons'
+import { BellOff, BellRing } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 import SwipeRow from '../components/ui/SwipeRow.jsx'
 import EmptyState from '../components/ui/EmptyState.jsx'
-
-const INITIAL_NOTIFS = [
-  { id: '1', title: 'Tugas Pemrograman Web ditambahkan', time: '10 menit lalu', read: false },
-  { id: '2', title: 'Jadwal Rapat BEM diubah ke 16:00', time: '2 jam lalu', read: true },
-  { id: '3', title: 'Pengingat: Deadline Tugas PWA besok!', time: '1 hari lalu', read: false },
-]
+import { useActivities } from '../hooks/useActivities.js'
+import { todayKey } from '../utils/date.js'
 
 export default function Notifications() {
-  const [isEnabled, setIsEnabled] = useState(true)
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFS)
+  const { activities } = useActivities()
+  const [isEnabled, setIsEnabled] = useState(false)
+  const [dismissedIds, setDismissedIds] = useState([])
 
+  // Cek status izin notifikasi saat halaman dimuat
   useEffect(() => {
     const saved = localStorage.getItem('notif_enabled')
-    if (saved !== null) setIsEnabled(saved === 'true')
+    if (saved === 'true' && Notification.permission === 'granted') {
+      setIsEnabled(true)
+    }
   }, [])
 
-  const toggleNotif = () => {
-    const newState = !isEnabled
-    setIsEnabled(newState)
-    localStorage.setItem('notif_enabled', String(newState))
+  const toggleNotif = async () => {
+    if (!isEnabled) {
+      // 1. Jika mau menyalakan, minta izin ke browser
+      if (!("Notification" in window)) {
+        alert("Browser kamu tidak mendukung notifikasi desktop.")
+        return
+      }
+
+      const permission = await Notification.requestPermission()
+      
+      if (permission === "granted") {
+        setIsEnabled(true)
+        localStorage.setItem('notif_enabled', 'true')
+        
+        // 2. Kirim notifikasi uji coba
+        new Notification("Notifikasi JadwalKu Aktif! 🎉", {
+          body: "Kamu akan menerima pengingat untuk tugas dan jadwal hari ini.",
+          icon: "/favicon.svg" // Pastikan ada file favicon di folder public
+        })
+      } else {
+        alert("Izin notifikasi ditolak. Buka pengaturan browser untuk mengizinkannya.")
+      }
+    } else {
+      // Jika dimatikan
+      setIsEnabled(false)
+      localStorage.setItem('notif_enabled', 'false')
+    }
   }
 
+  // Fungsi untuk mengirim notifikasi manual dari daftar
+  const sendTestNotif = (task) => {
+    if (Notification.permission === 'granted') {
+      new Notification("Pengingat Tugas ⏰", {
+        body: `${task.title} - Deadline pukul ${task.startTime}`,
+      })
+    }
+  }
+
+  const todayTasks = activities
+    .filter(a => a.isExternal === true && a.date === todayKey())
+    .filter(a => !dismissedIds.includes(a.id))
+
   const handleDelete = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
+    setDismissedIds(prev => [...prev, id])
   }
 
   return (
     <>
-      <PageHeader title="Notifikasi" subtitle="Pusat riwayat pemberitahuan aplikasi" />
+      <PageHeader title="Notifikasi" subtitle="Pengingat tugas & jadwal hari ini" />
 
       {/* Toggle Switch */}
       <div className="bg-surface border border-border rounded-xl p-4 sm:p-5 mb-6 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-text">Aktifkan Notifikasi</h3>
-          <p className="text-xs text-muted mt-1">Terima pemberitahuan saat ada jadwal atau tugas baru.</p>
+          <h3 className="text-sm font-semibold text-text flex items-center gap-2">
+            {isEnabled ? <BellRing size={16} className="text-success" /> : <BellOff size={16} className="text-muted" />}
+            Notifikasi Desktop
+          </h3>
+          <p className="text-xs text-muted mt-1">Terima pemberitahuan langsung di layar perangkatmu.</p>
         </div>
         <button
           onClick={toggleNotif}
@@ -56,34 +93,36 @@ export default function Notifications() {
       </div>
 
       {/* List Notifikasi */}
-      <h3 className="text-sm font-semibold mb-3">Riwayat Terbaru</h3>
+      <h3 className="text-sm font-semibold mb-3">Tenggat Hari Ini</h3>
       
-      {notifications.length === 0 ? (
+      {todayTasks.length === 0 ? (
         <EmptyState 
-          icon={Notification03Icon} 
-          title="Tidak ada notifikasi" 
-          description="Semua pemberitahuan sudah dibersihkan."
+          icon={BellOff} 
+          title="Tidak ada tugas hari ini" 
+          description="Semua pemberitahuan sudah dibersihkan atau tidak ada deadline."
         />
       ) : (
         <div className="space-y-2">
-          {notifications.map(notif => (
+          {todayTasks.map(task => (
             <SwipeRow
-              key={notif.id}
+              key={task.id}
               onCommit={(action) => {
-                if (action === 'delete') handleDelete(notif.id)
+                if (action.id === 'delete') handleDelete(task.id)
               }}
-              actionWidth={80}
-              // Kirim ikon sebagai props
-              actionIcon={<HugeiconsIcon icon={Delete02Icon} size={24} color="white" />}
             >
-              {/* Konten ditaruh langsung di dalam SwipeRow */}
-              <div className="flex items-center gap-3 w-full">
-                <div className={`w-2 h-2 rounded-full shrink-0 ${notif.read ? 'bg-transparent' : 'bg-white'}`} />
+              <div 
+                className="flex items-center gap-3 w-full cursor-pointer hover:opacity-80 transition"
+                onClick={() => sendTestNotif(task)} // Klik untuk tes notif
+                title="Klik untuk coba kirim notifikasi"
+              >
+                <div className="w-2 h-2 rounded-full shrink-0 bg-white" />
                 <div className="flex-1">
-                  <p className={`text-sm ${notif.read ? 'text-muted' : 'text-text font-medium'}`}>
-                    {notif.title}
+                  <p className="text-sm font-medium text-text">
+                    {task.title}
                   </p>
-                  <p className="text-xs text-dim mt-1">{notif.time}</p>
+                  <p className="text-xs text-muted mt-1">
+                    Deadline: Pukul {task.startTime} (Klik untuk tes notif)
+                  </p>
                 </div>
               </div>
             </SwipeRow>

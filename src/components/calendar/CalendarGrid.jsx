@@ -1,4 +1,3 @@
-// src/components/calendar/CalendarGrid.jsx
 import { useMemo } from 'react'
 import { buildCalendarMatrix, todayKey } from '../../utils/date.js'
 
@@ -46,7 +45,7 @@ export default function CalendarGrid({ year, month, activities, selectedDate, on
               {dateKey && (
                 <>
                   <span className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full
-                    ${isToday ? 'bg-white text-black font-semibold' : ''}`}>
+                    ${isToday ? 'bg-white text-black font-brand' : ''}`}>
                     {Number(dateKey.split('-')[2])}
                   </span>
                   {list.length > 0 && (

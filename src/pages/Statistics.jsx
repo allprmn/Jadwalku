@@ -1,8 +1,7 @@
-// src/pages/Statistics.jsx
 import { useMemo } from 'react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 import { useActivities } from '../hooks/useActivities.js'
-import { CATEGORIES } from '../data/dummyActivities.js'
+import { CATEGORIES } from '../data/categories.js'
 
 export default function Statistics() {
   const { activities, stats } = useActivities()
@@ -29,7 +28,8 @@ export default function Statistics() {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-xl border border-border bg-surface p-5">
           <p className="text-xs text-muted mb-1">Progres Keseluruhan</p>
-          <p className="text-3xl font-semibold mb-4 tabular-nums">{progress}%</p>
+          {/* Gunakan font-brand (Archivo Black) untuk angka besar */}
+          <p className="text-4xl font-brand mb-4 tabular-nums">{progress}%</p>
           <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
             <div className="h-full bg-white transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
@@ -43,15 +43,15 @@ export default function Statistics() {
           <p className="text-xs text-muted mb-3">Ringkasan</p>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <p className="text-2xl font-semibold tabular-nums">{stats.total}</p>
+              <p className="text-3xl font-brand tabular-nums">{stats.total}</p>
               <p className="text-xs text-muted">Total</p>
             </div>
             <div>
-              <p className="text-2xl font-semibold text-success tabular-nums">{stats.done}</p>
+              <p className="text-3xl font-brand text-success tabular-nums">{stats.done}</p>
               <p className="text-xs text-muted">Selesai</p>
             </div>
             <div>
-              <p className="text-2xl font-semibold tabular-nums">{stats.upcoming}</p>
+              <p className="text-3xl font-brand tabular-nums">{stats.upcoming}</p>
               <p className="text-xs text-muted">Belum</p>
             </div>
           </div>

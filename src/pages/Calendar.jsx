@@ -1,4 +1,3 @@
-// src/pages/Calendar.jsx
 import { useState, useMemo } from 'react'
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'

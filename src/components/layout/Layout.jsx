@@ -1,4 +1,3 @@
-// src/components/layout/Layout.jsx
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar.jsx'
@@ -11,7 +10,6 @@ export default function Layout() {
     <div className="min-h-screen bg-bg text-text">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Padding kiri disesuaikan dengan lebar sidebar (80px + margin 16px + jarak) */}
       <div className="md:pl-[104px] transition-all duration-300">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 

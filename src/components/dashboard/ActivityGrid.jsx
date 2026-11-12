@@ -1,4 +1,3 @@
-// src/components/dashboard/ActivityGrid.jsx
 import ActivityCard from './ActivityCard.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
 

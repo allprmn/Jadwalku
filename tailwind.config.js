@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Outfit"', 'sans-serif'],
+        brand: ['"Archivo Black"', 'sans-serif'],
+      },
       colors: {
         bg: '#000000',
         surface: '#0a0a0a',

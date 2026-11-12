@@ -1,4 +1,3 @@
-// src/pages/Activities.jsx
 import { useState, useMemo } from 'react'
 import { Plus, CheckCircle2, RotateCcw, Pencil, Trash2, Lock } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import Button from '../ui/Button.jsx'
-import { CATEGORIES } from '../../data/dummyActivities.js'
+import { CATEGORIES } from '../../data/categories.js'
 
-// Fungsi waktu dinamis dengan Native JS
 const getDynamicTimes = () => {
   const now = new Date()
   const start = new Date(now.setMinutes(Math.ceil(now.getMinutes() / 15) * 15, 0, 0))
@@ -16,10 +15,9 @@ const getDynamicTimes = () => {
   }
 }
 
-// --- INI DIA VARIABEL YANG HILANG TADI ---
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
-// -----------------------------------------
+
 
 const EMPTY = {
   title: '',

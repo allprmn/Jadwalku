@@ -1,4 +1,3 @@
-// src/App.jsx
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout.jsx'
 import Dashboard from './pages/Dashboard.jsx'

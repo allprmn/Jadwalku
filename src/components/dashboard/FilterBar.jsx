@@ -1,6 +1,5 @@
-// src/components/dashboard/FilterBar.jsx
 import { Search } from 'lucide-react'
-import { CATEGORIES } from '../../data/dummyActivities.js'
+import { CATEGORIES } from '../../data/categories.js'
 
 const selectCls =
   'h-10 px-3 rounded-lg bg-surface-2 border border-border text-sm text-text focus:outline-none focus:border-border-2 transition'

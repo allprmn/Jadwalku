@@ -1,4 +1,3 @@
-// src/components/ui/Badge.jsx
 const STATUS_STYLES = {
   upcoming: 'bg-white/10 text-white border-white/20',
   done: 'bg-success/15 text-success border-success/30',

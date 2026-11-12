@@ -1,4 +1,3 @@
-// src/components/ui/EmptyState.jsx
 import { Inbox } from 'lucide-react'
 
 export default function EmptyState({

@@ -1,4 +1,3 @@
-// src/pages/Settings.jsx
 import { useRef } from 'react'
 import { Download, RotateCcw, Upload } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
@@ -70,11 +69,6 @@ export default function Settings() {
           <p className="text-xs text-muted mb-2">
             <strong className="text-text">JadwalKu</strong> — aplikasi manajemen kegiatan berbasis
             React + Vite + Tailwind.
-          </p>
-          <p className="text-xs text-muted">
-            Data disimpan di{' '}
-            <code className="px-1 py-0.5 rounded bg-surface-2 text-text">localStorage</code>{' '}
-            browser.
           </p>
         </div>
       </div>

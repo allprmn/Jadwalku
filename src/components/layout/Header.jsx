@@ -1,4 +1,3 @@
-// src/components/layout/Header.jsx
 import { Menu, Bell, Search, X } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useActivities } from '../../hooks/useActivities.js'

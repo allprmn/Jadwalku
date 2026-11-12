@@ -47,8 +47,8 @@ export default function Sidebar({ open, onClose }) {
             <div className="w-10 h-10 rounded-xl bg-white text-black grid place-items-center font-bold text-xl shrink-0">
               J
             </div>
-            <span className="ml-3 font-semibold whitespace-nowrap opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-              JadwalKu
+            <span className="ml-3 font-brand whitespace-nowrap opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+              JADWALKU
             </span>
           </div>
 

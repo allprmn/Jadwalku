@@ -22,7 +22,7 @@ export default function StatCards() {
             <span className="text-xs text-muted">{label}</span>
             <Icon size={16} className="text-muted" />
           </div>
-          <p className="text-2xl sm:text-3xl font-semibold tabular-nums">{value}</p>
+          <p className="text-2xl sm:text-3xl font-brand tabular-nums">{value}</p>
         </div>
       ))}
     </div>
