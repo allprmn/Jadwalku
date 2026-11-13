@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import {
   LayoutDashboard,
   Calendar,
@@ -21,17 +20,9 @@ const NAV = [
 ]
 
 export default function Sidebar({ open, onClose }) {
-  const [profile, setProfile] = useState({ name: 'Nama Mahasiswa', nim: 'NIM' })
+  const userName = import.meta.env.VITE_USER_NAME || 'Nama Mahasiswa'
+  const userNim = import.meta.env.VITE_USER_NIM || 'NIM'
 
-  useEffect(() => {
-    const loadProfile = () => {
-      const saved = JSON.parse(localStorage.getItem('user_profile'))
-      if (saved) setProfile(saved)
-    }
-    loadProfile()
-    window.addEventListener('profileUpdated', loadProfile)
-    return () => window.removeEventListener('profileUpdated', loadProfile)
-  }, [])
 
   return (
     <>
@@ -123,11 +114,11 @@ export default function Sidebar({ open, onClose }) {
           <div className="p-3 mt-auto border-t border-border/50">
             <div className="flex items-center gap-3 p-2 rounded-xl">
               <div className="w-9 h-9 rounded-full bg-surface-2 grid place-items-center font-semibold shrink-0 text-sm">
-                {profile.name.charAt(0).toUpperCase() || 'M'}
+                {userName.charAt(0).toUpperCase()}
               </div>
               <div className="flex flex-col whitespace-nowrap opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-sm font-medium truncate max-w-[150px]">{profile.name}</span>
-                <span className="text-xs text-muted">{profile.nim}</span>
+                <span className="text-sm font-medium truncate max-w-[150px]">{userName}</span>
+                <span className="text-xs text-muted">{userNim}</span>
               </div>
             </div>
           </div>

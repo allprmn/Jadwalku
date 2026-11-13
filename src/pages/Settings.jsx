@@ -1,31 +1,18 @@
-// src/pages/Settings.jsx
-import { useState, useRef, useEffect } from 'react'
-import { Download, Trash2, Database, User, Save, CheckCircle2 } from 'lucide-react'
+import { useRef } from 'react'
+import { Download, Trash2, Database, User, Info } from 'lucide-react'
 import PageHeader from '../components/ui/PageHeader.jsx'
 import Button from '../components/ui/Button.jsx'
 import { useActivities } from '../hooks/useActivities.js'
 import ConfirmModal from '../components/ui/ConfirmModal.jsx'
+import { useState } from 'react'
 
 export default function Settings() {
   const { activities, deleteAllActivities } = useActivities()
   const fileRef = useRef(null)
-
   const [showDeleteAll, setShowDeleteAll] = useState(false)
-  const [profile, setProfile] = useState({ name: '', nim: '' })
-  const [saved, setSaved] = useState(false)
-
-  useEffect(() => {
-    const savedProfile = JSON.parse(localStorage.getItem('user_profile'))
-    if (savedProfile) setProfile(savedProfile)
-  }, [])
-
-  const handleSaveProfile = (e) => {
-    e.preventDefault()
-    localStorage.setItem('user_profile', JSON.stringify(profile))
-    setSaved(true)
-    window.dispatchEvent(new Event('profileUpdated'))
-    setTimeout(() => setSaved(false), 3000)
-  }
+  
+  const userName = import.meta.env.VITE_USER_NAME || 'Nama Mahasiswa'
+  const userNim = import.meta.env.VITE_USER_NIM || 'NIM'
 
   const handleExport = () => {
     const internalData = activities.filter(a => !a.isExternal)
@@ -38,22 +25,17 @@ export default function Settings() {
     URL.revokeObjectURL(url)
   }
 
-  const handleClearData = () => {
-    setShowDeleteAll(true)
-  }
   const confirmClearData = async () => {
     await deleteAllActivities()
   }
 
-  const inputCls = 'w-full h-10 px-3 rounded-lg bg-surface-2 border border-border text-sm text-text focus:outline-none focus:border-border-2 transition'
-
   return (
     <>
-      <PageHeader title="Pengaturan" subtitle="Konfigurasi profil dan manajemen data aplikasi" />
+      <PageHeader title="Pengaturan" subtitle="Konfigurasi aplikasi dan manajemen data" />
 
       <div className="space-y-6 max-w-3xl">
-
-        {/* KARTU 1: PROFIL MAHASISWA */}
+        
+        {/* KARTU 1: INFORMASI PROFIL (READ-ONLY) */}
         <div className="rounded-xl border border-border bg-surface p-5 sm:p-6">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-10 h-10 rounded-full bg-surface-2 grid place-items-center">
@@ -61,42 +43,24 @@ export default function Settings() {
             </div>
             <div>
               <h3 className="text-base font-brand">Profil Mahasiswa</h3>
-              <p className="text-xs text-muted">Informasi ini akan ditampilkan di Sidebar dan Header.</p>
+              <p className="text-xs text-muted">Informasi ini dikonfigurasi secara permanen melalui environment variables.</p>
             </div>
           </div>
-
-          <form onSubmit={handleSaveProfile} className="grid gap-4 sm:grid-cols-2">
+          
+          <div className="grid gap-4 sm:grid-cols-2 bg-surface-2/50 p-4 rounded-lg border border-border/50">
             <div>
-              <label className="block text-xs font-medium text-muted mb-1.5">Nama Lengkap</label>
-              <input
-                value={profile.name}
-                onChange={e => setProfile({ ...profile, name: e.target.value })}
-                placeholder="Mis. Aldi Pramana"
-                className={inputCls}
-                required
-              />
+              <p className="text-xs text-muted mb-1">Nama Lengkap</p>
+              <p className="text-sm font-medium">{userName}</p>
             </div>
             <div>
-              <label className="block text-xs font-medium text-muted mb-1.5">NIM</label>
-              <input
-                value={profile.nim}
-                onChange={e => setProfile({ ...profile, nim: e.target.value })}
-                placeholder="Mis. 1247050031"
-                className={inputCls}
-                required
-              />
+              <p className="text-xs text-muted mb-1">NIM</p>
+              <p className="text-sm font-medium">{userNim}</p>
             </div>
-            <div className="sm:col-span-2 flex items-center gap-3 mt-2">
-              <Button type="submit">
-                <Save size={16} /> Simpan Profil
-              </Button>
-              {saved && (
-                <span className="inline-flex items-center gap-1 text-xs text-success animate-fade-in">
-                  <CheckCircle2 size={14} /> Profil berhasil disimpan!
-                </span>
-              )}
-            </div>
-          </form>
+          </div>
+          <div className="flex items-start gap-2 mt-3 text-xs text-muted">
+            <Info size={14} className="shrink-0 mt-0.5" />
+            <p>Untuk mengubah nama atau NIM, edit file <code className="bg-surface-2 px-1 rounded">.env</code> di server/komputer Anda.</p>
+          </div>
         </div>
 
         {/* KARTU 2: MANAJEMEN DATA */}
@@ -115,13 +79,10 @@ export default function Settings() {
             <Button variant="outline" onClick={handleExport}>
               <Download size={16} /> Ekspor Backup (JSON)
             </Button>
-            <Button variant="danger" onClick={handleClearData}>
+            <Button variant="danger" onClick={() => setShowDeleteAll(true)}>
               <Trash2 size={16} /> Hapus Semua Jadwal
             </Button>
           </div>
-          <p className="text-[11px] text-muted mt-4">
-            *Catatan: Ekspor JSON hanya menyimpan data jadwal yang kamu buat sendiri. Data tugas dari aplikasi eksternal tidak akan diekspor.
-          </p>
         </div>
 
         {/* KARTU 3: TENTANG APLIKASI */}
