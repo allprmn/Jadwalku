@@ -1,33 +1,45 @@
 import { NavLink } from 'react-router-dom'
-import { 
-  LayoutDashboard, 
-  Calendar, 
-  ListChecks, 
-  BarChart3, 
-  Settings, 
-  LogOut, 
+import { useState, useEffect } from 'react'
+import {
+  LayoutDashboard,
+  Calendar,
+  ListChecks,
+  BarChart3,
+  Settings,
+  LogOut,
   Search,
   ExternalLink
 } from 'lucide-react'
 
 const NAV = [
-  { to: '/',            label: 'Dashboard',  icon: LayoutDashboard, end: true },
-  { to: '/calendar',    label: 'Kalender',   icon: Calendar },
-  { to: '/activities',  label: 'Kegiatan',   icon: ListChecks },
-  { to: '/statistics',  label: 'Statistik',  icon: BarChart3 },
-  { to: '/settings',    label: 'Pengaturan', icon: Settings },
-  { href: 'https://aldipramana.my.id', label: 'Landing Page', icon: ExternalLink, isExternal: true }, 
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/calendar', label: 'Kalender', icon: Calendar },
+  { to: '/activities', label: 'Kegiatan', icon: ListChecks },
+  { to: '/statistics', label: 'Statistik', icon: BarChart3 },
+  { to: '/settings', label: 'Pengaturan', icon: Settings },
+  { href: 'https://aldipramana.my.id', label: 'Landing Page', icon: ExternalLink, isExternal: true },
 ]
 
 export default function Sidebar({ open, onClose }) {
+  const [profile, setProfile] = useState({ name: 'Nama Mahasiswa', nim: 'NIM' })
+
+  useEffect(() => {
+    const loadProfile = () => {
+      const saved = JSON.parse(localStorage.getItem('user_profile'))
+      if (saved) setProfile(saved)
+    }
+    loadProfile()
+    window.addEventListener('profileUpdated', loadProfile)
+    return () => window.removeEventListener('profileUpdated', loadProfile)
+  }, [])
+
   return (
     <>
       {/* Backdrop Mobile */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-[45] bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-[45] bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
       />
 
       <aside
@@ -41,7 +53,7 @@ export default function Sidebar({ open, onClose }) {
         `}
       >
         <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden">
-          
+
           {/* Brand / Logo */}
           <div className="h-16 flex items-center px-4 mt-2">
             <div className="w-10 h-10 rounded-xl bg-white text-black grid place-items-center font-bold text-xl shrink-0">
@@ -71,7 +83,6 @@ export default function Sidebar({ open, onClose }) {
               const linkClass = "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all whitespace-nowrap text-muted hover:bg-surface-2 hover:text-text"
               const activeClass = "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all whitespace-nowrap bg-white text-black font-medium"
 
-              // Jika menu berupa link eksternal (Landing Page)
               if (item.isExternal) {
                 return (
                   <a
@@ -90,7 +101,6 @@ export default function Sidebar({ open, onClose }) {
                 )
               }
 
-              // Jika menu internal (React Router)
               return (
                 <NavLink
                   key={item.to}
@@ -113,11 +123,11 @@ export default function Sidebar({ open, onClose }) {
           <div className="p-3 mt-auto border-t border-border/50">
             <div className="flex items-center gap-3 p-2 rounded-xl">
               <div className="w-9 h-9 rounded-full bg-surface-2 grid place-items-center font-semibold shrink-0 text-sm">
-                M
+                {profile.name.charAt(0).toUpperCase() || 'M'}
               </div>
               <div className="flex flex-col whitespace-nowrap opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-sm font-medium">Aldi Pramana</span>
-                <span className="text-xs text-muted">1247050031</span>
+                <span className="text-sm font-medium truncate max-w-[150px]">{profile.name}</span>
+                <span className="text-xs text-muted">{profile.nim}</span>
               </div>
             </div>
           </div>

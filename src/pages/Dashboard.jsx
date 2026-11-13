@@ -8,6 +8,7 @@ import FilterBar from '../components/dashboard/FilterBar.jsx'
 import ActivityGrid from '../components/dashboard/ActivityGrid.jsx'
 import ActivityForm from '../components/dashboard/ActivityForm.jsx'
 import { useActivities } from '../hooks/useActivities.js'
+import ConfirmModal from '../components/ui/ConfirmModal.jsx'
 
 export default function Dashboard() {
   // Tambahkan loading
@@ -27,6 +28,8 @@ export default function Dashboard() {
       .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime))
   }, [activities, searchQuery, category, status])
 
+  const [deleteTarget, setDeleteTarget] = useState(null)
+
   const openCreate = () => { setEditing(null); setModalOpen(true) }
   const openEdit = (act) => { setEditing(act); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setEditing(null) }
@@ -37,8 +40,16 @@ export default function Dashboard() {
     closeModal()
   }
 
-  const handleDelete = async (id) => {
-    if (confirm('Hapus kegiatan ini?')) await deleteActivity(id)
+  const handleDelete = (id) => {
+    const act = activities.find(a => a.id === id)
+    if (act) setDeleteTarget(act) // Buka modal
+  }
+
+  const confirmDelete = async () => {
+    if (deleteTarget) {
+      await deleteActivity(deleteTarget.id)
+      setDeleteTarget(null)
+    }
   }
 
   // LOADING SKELETON
@@ -79,6 +90,13 @@ export default function Dashboard() {
       <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}>
         <ActivityForm initial={editing} onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Hapus Kegiatan"
+        message={`Apakah kamu yakin ingin menghapus "${deleteTarget?.title}"? Tindakan ini tidak bisa dibatalkan.`}
+      />
     </>
   )
 }

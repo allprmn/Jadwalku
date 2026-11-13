@@ -8,6 +8,7 @@ import DayDetail from '../components/calendar/DayDetail.jsx'
 import ActivityForm from '../components/dashboard/ActivityForm.jsx'
 import { useActivities } from '../hooks/useActivities.js'
 import { todayKey, MONTH_NAMES } from '../utils/date.js'
+import ConfirmModal from '../components/ui/ConfirmModal.jsx'
 
 export default function Calendar() {
   const { activities, addActivity, updateActivity, deleteActivity, toggleStatus } = useActivities()
@@ -30,7 +31,7 @@ export default function Calendar() {
     c.month === 0 ? { year: c.year - 1, month: 11 } : { year: c.year, month: c.month - 1 })
   const next = () => setCursor(c =>
     c.month === 11 ? { year: c.year + 1, month: 0 } : { year: c.year, month: c.month + 1 })
-
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const openCreate = () => { setEditing(null); setModalOpen(true) }
   const openEdit = (a) => { setEditing(a); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setEditing(null) }
@@ -42,7 +43,15 @@ export default function Calendar() {
   }
 
   const handleDelete = (id) => {
-    if (confirm('Hapus kegiatan ini?')) deleteActivity(id)
+    const act = activities.find(a => a.id === id)
+    if (act) setDeleteTarget(act)
+  }
+
+  const confirmDelete = async () => {
+    if (deleteTarget) {
+      await deleteActivity(deleteTarget.id)
+      setDeleteTarget(null)
+    }
   }
 
   return (
@@ -93,6 +102,18 @@ export default function Calendar() {
           onCancel={closeModal}
         />
       </Modal>
+
+      <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}>
+        <ActivityForm initial={editing} defaultDate={selectedDate} onSubmit={handleSubmit} onCancel={closeModal} />
+      </Modal>
+
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Hapus Kegiatan"
+        message={`Apakah kamu yakin ingin menghapus "${deleteTarget?.title}"?`}
+      />
     </>
   )
 }

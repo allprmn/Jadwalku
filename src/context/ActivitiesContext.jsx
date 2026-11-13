@@ -80,11 +80,17 @@ export function ActivitiesProvider({ children }) {
     return { total, done, upcoming: total - done }
   }, [activities])
 
+   async function deleteAllActivities() {
+    await supabase.from('activities').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+    fetchData()
+  }
+
   return (
     <ActivitiesContext.Provider value={{
       activities, stats, loading: initialLoading,
       addActivity, updateActivity, deleteActivity, toggleStatus,
-      searchQuery, setSearchQuery 
+      searchQuery, setSearchQuery,
+      deleteAllActivities
     }}>
       {children}
     </ActivitiesContext.Provider>

@@ -9,6 +9,7 @@ import FilterBar from '../components/dashboard/FilterBar.jsx'
 import ActivityForm from '../components/dashboard/ActivityForm.jsx'
 import { useActivities } from '../hooks/useActivities.js'
 import { formatLongDate } from '../utils/date.js'
+import ConfirmModal from '../components/ui/ConfirmModal.jsx'
 
 export default function Activities() {
   const { activities, loading, addActivity, updateActivity, deleteActivity, toggleStatus } = useActivities()
@@ -26,6 +27,7 @@ export default function Activities() {
       .sort((a, b) => (a.date + a.startTime).localeCompare(b.date + b.startTime))
   }, [activities, search, category, status])
 
+  const [deleteTarget, setDeleteTarget] = useState(null)
   const openCreate = () => { setEditing(null); setModalOpen(true) }
   const openEdit = (a) => { setEditing(a); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setEditing(null) }
@@ -36,8 +38,17 @@ export default function Activities() {
     closeModal()
   }
 
-  const handleDelete = async (id) => {
-    if (confirm('Hapus kegiatan ini?')) await deleteActivity(id)
+
+  const handleDelete = (id) => {
+    const act = activities.find(a => a.id === id)
+    if (act) setDeleteTarget(act)
+  }
+
+  const confirmDelete = async () => {
+    if (deleteTarget) {
+      await deleteActivity(deleteTarget.id)
+      setDeleteTarget(null)
+    }
   }
 
   if (loading) {
@@ -82,7 +93,7 @@ export default function Activities() {
                   <span className="hidden md:block text-xs text-muted">{formatLongDate(a.date)}</span>
                   <span className="hidden md:block text-xs text-muted">{a.startTime} – {a.endTime}</span>
                   <span className="hidden md:block"><Badge type="category" value={a.category} /></span>
-                  
+
                   <div className="flex items-center gap-1 md:justify-end">
                     {a.isExternal ? (
                       <span className="inline-flex items-center gap-1 text-[11px] text-muted italic mr-2">
@@ -112,6 +123,17 @@ export default function Activities() {
       <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}>
         <ActivityForm initial={editing} onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
+      <Modal open={modalOpen} onClose={closeModal} title={editing ? 'Edit Kegiatan' : 'Tambah Kegiatan'}>
+        <ActivityForm initial={editing} onSubmit={handleSubmit} onCancel={closeModal} />
+      </Modal>
+
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Hapus Kegiatan"
+        message={`Apakah kamu yakin ingin menghapus "${deleteTarget?.title}"?`}
+      />
     </>
   )
 }

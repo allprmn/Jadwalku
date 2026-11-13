@@ -1,11 +1,14 @@
 const STATUS_STYLES = {
   upcoming: 'bg-white/10 text-white border-white/20',
   done: 'bg-success/15 text-success border-success/30',
+  late: 'bg-red-500/15 text-red-500 border-red-500/30',
 }
 
 const STATUS_LABEL = {
   upcoming: 'Belum Selesai',
   done: 'Selesai',
+  late: 'Terlambat',
+
 }
 
 const CATEGORY_STYLES = {
