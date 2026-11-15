@@ -9,6 +9,7 @@ import {
   Search,
   ExternalLink
 } from 'lucide-react'
+import { USER_PROFILE } from '../../config.js'
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -20,8 +21,8 @@ const NAV = [
 ]
 
 export default function Sidebar({ open, onClose }) {
-  const userName = import.meta.env.VITE_USER_NAME || 'Nama Mahasiswa'
-  const userNim = import.meta.env.VITE_USER_NIM || 'NIM'
+  const userName = USER_PROFILE.name
+  const userNim = USER_PROFILE.nim
 
 
   return (

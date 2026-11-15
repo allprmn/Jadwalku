@@ -5,6 +5,7 @@ import Button from '../components/ui/Button.jsx'
 import { useActivities } from '../hooks/useActivities.js'
 import ConfirmModal from '../components/ui/ConfirmModal.jsx'
 import { useState } from 'react'
+import { USER_PROFILE } from '../config.js'
 
 export default function Settings() {
   const { activities, deleteAllActivities } = useActivities()
@@ -43,24 +44,21 @@ export default function Settings() {
             </div>
             <div>
               <h3 className="text-base font-brand">Profil Mahasiswa</h3>
-              <p className="text-xs text-muted">Informasi ini dikonfigurasi secara permanen melalui environment variables.</p>
+              <p className="text-xs text-muted">Informasi ini dikonfigurasi secara permanen di dalam kode.</p>
             </div>
           </div>
           
           <div className="grid gap-4 sm:grid-cols-2 bg-surface-2/50 p-4 rounded-lg border border-border/50">
             <div>
               <p className="text-xs text-muted mb-1">Nama Lengkap</p>
-              <p className="text-sm font-medium">{userName}</p>
+              <p className="text-sm font-medium">{USER_PROFILE.name}</p>
             </div>
             <div>
               <p className="text-xs text-muted mb-1">NIM</p>
-              <p className="text-sm font-medium">{userNim}</p>
+              <p className="text-sm font-medium">{USER_PROFILE.nim}</p>
             </div>
           </div>
-          <div className="flex items-start gap-2 mt-3 text-xs text-muted">
-            <Info size={14} className="shrink-0 mt-0.5" />
-            <p>Untuk mengubah nama atau NIM, edit file <code className="bg-surface-2 px-1 rounded">.env</code> di server/komputer Anda.</p>
-          </div>
+          
         </div>
 
         {/* KARTU 2: MANAJEMEN DATA */}
@@ -91,10 +89,7 @@ export default function Settings() {
           <p className="text-sm text-muted mb-4">
             <strong className="text-text">JadwalKu</strong> adalah aplikasi manajemen kegiatan dan *deadline* tugas berbasis React + Vite + Tailwind CSS, terintegrasi dengan database Supabase.
           </p>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-2 border border-border text-xs text-text">
-            <span className="w-2 h-2 rounded-full bg-success"></span>
-            Terhubung ke Supabase PostgreSQL
-          </div>
+          
         </div>
 
       </div>

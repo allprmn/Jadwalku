@@ -1,14 +1,15 @@
 import { Menu, Bell, Search, X } from 'lucide-react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { useActivities } from '../../hooks/useActivities.js'
+import { USER_PROFILE } from '../../config.js'
 
 export default function Header({ onMenuClick }) {
   const location = useLocation()
   const navigate = useNavigate()
   const { searchQuery, setSearchQuery } = useActivities()
 
-  const userName = import.meta.env.VITE_USER_NAME || 'Nama Mahasiswa'
-  const userNim = import.meta.env.VITE_USER_NIM || 'NIM'
+   const userName = USER_PROFILE.name
+  const userNim = USER_PROFILE.nim
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value)
