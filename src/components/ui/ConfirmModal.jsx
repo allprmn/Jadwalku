@@ -38,7 +38,7 @@ export default function ConfirmModal({
                 Batal
               </Button>
               <Button 
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white border-none" 
+                className="flex-1 bg-red-500 hover:bg-red-600 text-black border-none" 
                 onClick={() => {
                   onConfirm()
                   onClose()
